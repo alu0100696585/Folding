@@ -91,10 +91,7 @@ break;
 case 2: this.$ = { cnst:$$[$0-3] , V:$$[$0-2] , proc:$$[$0-1], st:$$[$0] };
 break;
 case 4: 
-	  var sc = scope;
-	  sc--;
 	  this.$ = { type: 'procedure' , left: $$[$0-6], argumentos: $$[$0-4] , right: $$[$0-1] }; 
-	  symbolTables[sc].vars[$$[$0-6]] = {type: 'PROC'};
 	
 break;
 case 5:
