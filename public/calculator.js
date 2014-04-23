@@ -150,12 +150,12 @@ case 24:this.$ = [];
 break;
 case 25:
 	this.$ = [$$[$0]];
-	symbol_table.vars[$$[$0]] = {type: var};
+	symbol_table.vars[$$[$0]] = {type: 'var'};
       
 break;
 case 26:
 	this.$ = [$$[$0-2]].concat($$[$0]);
-	symbol_table.vars[$$[$0-2]] = {type: var};
+	symbol_table.vars[$$[$0-2]] = {type: 'var'};
       
 break;
 case 27:this.$ = [];

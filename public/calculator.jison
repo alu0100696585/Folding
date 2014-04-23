@@ -170,12 +170,12 @@ arg
     | ID 
       {
 	$$ = [$1];
-	symbol_table.vars[$1] = {type: var};
+	symbol_table.vars[$1] = {type: 'var'};
       } 
     | ID COMMA arg
       {
 	$$ = [$1].concat($3);
-	symbol_table.vars[$1] = {type: var};
+	symbol_table.vars[$1] = {type: 'var'};
       } 
     ;
     
