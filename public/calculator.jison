@@ -67,7 +67,7 @@ prog
         { 
           $$ = $1; 
           console.log($$);
-          return [$$, symbol_table];
+          return [$$, symbolTables];
         }
     ;
     

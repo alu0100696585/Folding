@@ -85,7 +85,7 @@ switch (yystate) {
 case 1: 
           this.$ = $$[$0-2]; 
           console.log(this.$);
-          return [this.$, symbol_table];
+          return [this.$, symbolTables];
         
 break;
 case 2: this.$ = { cnst:$$[$0-3] , V:$$[$0-2] , proc:$$[$0-1], st:$$[$0] };
