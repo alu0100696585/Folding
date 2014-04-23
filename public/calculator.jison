@@ -15,7 +15,7 @@ function get_Scope(){
 function makeScope(id){
 
   scope++;
-  symbolTables.vars[id] = symbolTables[scope] = {name: id, father: symbol_table.name, vars: {}}
+  symbolTables.push({name: id, father: symbol_table.name, vars: {}});
   symbol_table = symbolTables[scope];
 
 }
@@ -35,7 +35,7 @@ function findDef(id){
       if(i == f)
 	return;
     }
-    scope--;
+    s--;
   }
    
   throw new Error( f + " is not defined.");
