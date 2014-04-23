@@ -79,12 +79,17 @@ block
 proc
     : /* empty */
     | PROCEDURE name '(' pargsp ')' ';' block ';'
-       { $$ = { type: 'procedure' , left: $2, argumentos: $4 , right: $7 }; }
+       { 
+	  var sc = scope;
+	  sc--;
+	  $$ = { type: 'procedure' , left: $2, argumentos: $4 , right: $7 }; 
+	  symbolTables[sc].vars[$2] = {type: 'PROC'};
+	}
     ;
    
 
 pargsp
-    : '(' arg ')'
+    : arg
       {
 	$$ = $1;
       }
