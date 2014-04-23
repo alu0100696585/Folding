@@ -1,7 +1,46 @@
  /* description: Parses end executes mathematical expressions. */
 
 %{
-var symbol_table = {};
+
+var symbolTables = [{name = 'global', father: 'null' , vars: {}}];
+
+var scope = 0;
+
+var symbol_table = symbolTables[scope];
+
+function get_Scope(){
+  return scope;
+}
+
+function makeScope(id){
+
+  scope++;
+  symbolTables.vars[id] = symbolTables[scope] = {name: id, father: symbol_table.id, vars: {}}
+  symbol_table = symbolTables[scope];
+
+}
+
+function scopeUp(){
+  scope--;
+  return scope;
+}
+
+function findDef(id){
+
+  var f = id;
+  var s = scope;
+  
+  while(s >= 0){
+    for (var i in symbolTables[s].vars){
+      if(i == f)
+	return;
+    }
+    scope--;
+  }
+   
+  throw new Error( f + " is not defined.");
+
+}
 
 function fact (n) { 
   return n==0 ? 1 : fact(n-1) * n 
@@ -39,25 +78,45 @@ block
     
 proc
     : /* empty */
-    | PROCEDURE ID '(' arg ')' ';' block ';'
+    | PROCEDURE name '(' pargsp ')' ';' block ';'
        { $$ = { type: 'procedure' , left: $2, argumentos: $4 , right: $7 }; }
     ;
    
+
+pargsp
+    : '(' arg ')'
+      {
+	$$ = $1;
+      }
+    ;
+
+name 
+    : ID
+      {
+	$$ = $1;
+	makeScope($1);
+      }
+    ;
+    
 constt
     : /* empty */
     | CONST cvrb
-	{ $$ = {type: 'CONST' , constantes: $2}; }
+	{ 
+	  $$ = {type: 'CONST' , constantes: $2};
+	}
     ;
 
 cvrb
     : ID '=' NUMBER ';'
       {
 	$$ = {type: '=', left: $1 , right: $3};
+	symbol_table.vars[$1] = {type: 'const', valor: $3};
       }
     | ID '=' NUMBER COMMA cvrb
       { 
 	$$ = [{type: '=', left: $1 , right: $3}];
 	$$ = $$.concat($5);
+	symbol_table.vars[$1] = {type: 'const', valor: $3};
       }
     ;
 
@@ -68,11 +127,15 @@ vaar
     ;
 vrb 
     : ID ';'
-      {$$ = [$1];}
+      {
+	$$ = [$1];
+	symbol_table.vars[$1] = {type: var};
+      }
     | ID COMMA vrb
       { 
 	$$ = [{type: 'VAR', id:$1 }];
 	$$ = $$.concat($3);
+	symbol_table.vars[$1] = {type: var};
       }
     ;
 
@@ -105,9 +168,15 @@ arg
     : /* empty */
       {$$ = [];}
     | ID 
-      {$$ = [$1];} 
+      {
+	$$ = [$1];
+	symbol_table.vars[$1] = {type: var};
+      } 
     | ID COMMA arg
-      {$$ = [$1].concat($3);} 
+      {
+	$$ = [$1].concat($3);
+	symbol_table.vars[$1] = {type: var};
+      } 
     ;
     
 llamada
@@ -138,7 +207,7 @@ condition
 
 e
     : ID '=' e
-        { symbol_table[$1] = $$ = {type:'ID' , left:$3}; }
+        { $$ = {type:'ID' , left:$3}; }
     | PI '=' e 
         { throw new Error("Can't assign to constant 'π'"); }
     | E '=' e 
@@ -176,6 +245,6 @@ e
     | PI
         {$$ = Math.PI;}
     | ID 
-        { $$ = symbol_table[yytext] || $1; }
+        { $$ = $1; }
     ;
 
