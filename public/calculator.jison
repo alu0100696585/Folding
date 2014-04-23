@@ -129,13 +129,13 @@ vrb
     : ID ';'
       {
 	$$ = [$1];
-	symbol_table.vars[$1] = {type: var};
+	symbol_table.vars[$1] = {type: 'var'};
       }
     | ID COMMA vrb
       { 
 	$$ = [{type: 'VAR', id:$1 }];
 	$$ = $$.concat($3);
-	symbol_table.vars[$1] = {type: var};
+	symbol_table.vars[$1] = {type: 'var'};
       }
     ;
 

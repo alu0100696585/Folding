@@ -120,13 +120,13 @@ case 12: this.$ = {type: 'VAR' , variables: $$[$0]};
 break;
 case 13:
 	this.$ = [$$[$0-1]];
-	symbol_table.vars[$$[$0-1]] = {type: var};
+	symbol_table.vars[$$[$0-1]] = {type: 'var'};
       
 break;
 case 14: 
 	this.$ = [{type: 'VAR', id:$$[$0-2] }];
 	this.$ = this.$.concat($$[$0]);
-	symbol_table.vars[$$[$0-2]] = {type: var};
+	symbol_table.vars[$$[$0-2]] = {type: 'var'};
       
 break;
 case 15: this.$ = (typeof $$[$0] === 'undefined')? [] : [ $$[$0] ]; 
