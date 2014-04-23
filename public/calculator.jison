@@ -2,7 +2,7 @@
 
 %{
 
-var symbolTables = [{name = 'global', father: null , vars: {}}];
+var symbolTables = [{name: 'global', father: null , vars: {}}];
 
 var scope = 0;
 
