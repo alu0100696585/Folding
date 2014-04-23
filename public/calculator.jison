@@ -123,7 +123,7 @@ cvrb
 vaar
     : /* empty */
     | VAR vrb
-      { $$ = {type: 'VAR' , variables: $2} }
+      { $$ = {type: 'VAR' , variables: $2}; }
     ;
 vrb 
     : ID ';'
@@ -161,7 +161,7 @@ st
     | BEGIN expressions ';' END
         {$$ = $2;}
     | CALL ID '(' llamada ')'
-        { $$ = {type: 'call' , id:$2 , lista: $4} }
+        { $$ = {type: 'call' , id:$2 , lista: $4}; }
     ;
     
 arg

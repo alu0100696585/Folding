@@ -116,7 +116,7 @@ case 10:
 	symbol_table.vars[$$[$0-4]] = {type: 'const', valor: $$[$0-2]};
       
 break;
-case 12: this.$ = {type: 'VAR' , variables: $$[$0]} 
+case 12: this.$ = {type: 'VAR' , variables: $$[$0]}; 
 break;
 case 13:
 	this.$ = [$$[$0-1]];
@@ -144,7 +144,7 @@ case 21:this.$ = {type:'while', condicion: $$[$0-2] , do: $$[$0]};
 break;
 case 22:this.$ = $$[$0-2];
 break;
-case 23: this.$ = {type: 'call' , id:$$[$0-3] , lista: $$[$0-1]} 
+case 23: this.$ = {type: 'call' , id:$$[$0-3] , lista: $$[$0-1]}; 
 break;
 case 24:this.$ = [];
 break;
