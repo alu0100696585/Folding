@@ -131,14 +131,14 @@ vaar
 vrb 
     : ID ';'
       {
+        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [$1];
-	symbol_table.vars[$1] = {type: 'var'};
       }
     | ID COMMA vrb
       { 
+        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [{type: 'VAR', id:$1 }];
 	$$ = $$.concat($3);
-	symbol_table.vars[$1] = {type: 'var'};
       }
     ;
 
@@ -172,13 +172,13 @@ arg
       {$$ = [];}
     | ID 
       {
+        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [$1];
-	symbol_table.vars[$1] = {type: 'var'};
       } 
     | ID COMMA arg
       {
+        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [$1].concat($3);
-	symbol_table.vars[$1] = {type: 'var'};
       } 
     ;
     
