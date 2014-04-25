@@ -83,9 +83,11 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1: 
+          var table = symbolTables;
+          symbolTables = {};
           this.$ = $$[$0-2]; 
           console.log(this.$);
-          return [this.$, symbolTables];
+          return [this.$, table];
         
 break;
 case 2: this.$ = { cnst:$$[$0-3] , V:$$[$0-2] , proc:$$[$0-1], st:$$[$0] };

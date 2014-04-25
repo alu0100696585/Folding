@@ -65,9 +65,11 @@ function fact (n) {
 prog
     :block DOT EOF
         { 
+          var table = symbolTables;
+          symbolTables = {};
           $$ = $1; 
           console.log($$);
-          return [$$, symbolTables];
+          return [$$, table];
         }
     ;
     
