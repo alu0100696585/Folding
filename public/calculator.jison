@@ -66,7 +66,7 @@ prog
     :block DOT EOF
         { 
           var table = symbolTables;
-          symbolTables = {};
+          symbolTables = [{name: 'global', father: null , vars: {}}];
           $$ = $1; 
           console.log($$);
           return [$$, table];

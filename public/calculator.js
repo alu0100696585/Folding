@@ -84,7 +84,7 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1: 
           var table = symbolTables;
-          symbolTables = {};
+          symbolTables = [{name: 'global', father: null , vars: {}}];
           this.$ = $$[$0-2]; 
           console.log(this.$);
           return [this.$, table];
