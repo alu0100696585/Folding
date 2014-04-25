@@ -100,6 +100,7 @@ case 5:
 break;
 case 6:
 	this.$ = $$[$0];
+	symbol_table.vars[$$[$0]] = {type: 'proc'};
 	makeScope($$[$0]);
       
 break;
