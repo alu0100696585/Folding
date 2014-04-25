@@ -95,9 +95,9 @@ pargsp
 name 
     : ID
       {
-	$$ = $1;
 	symbol_table.vars[$1] = {type: 'proc'};
 	makeScope($1);
+	$$ = $1;
       }
     ;
     
