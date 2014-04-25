@@ -84,7 +84,12 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1: 
           var table = symbolTables;
+          
           symbolTables = [{name: 'global', father: null , vars: {}}];
+          scope = 0;
+	  symbol_table = symbolTables[scope];
+          
+          
           this.$ = $$[$0-2]; 
           console.log(this.$);
           return [this.$, table];
