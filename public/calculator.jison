@@ -112,14 +112,14 @@ constt
 cvrb
     : ID '=' NUMBER ';'
       {
+        symbol_table.vars[$1] = {type: 'const', valor: $3};
 	$$ = {type: '=', left: $1 , right: $3};
-	symbol_table.vars[$1] = {type: 'const'};
       }
     | ID '=' NUMBER COMMA cvrb
       { 
+	symbol_table.vars[$1] = {type: 'const', valor: $3};
 	$$ = [{type: '=', left: $1 , right: $3}];
 	$$ = $$.concat($5);
-	symbol_table.vars[$1] = {type: 'const'};
       }
     ;
 
