@@ -110,13 +110,13 @@ case 8:
 break;
 case 9:
 	this.$ = {type: '=', left: $$[$0-3] , right: $$[$0-1]};
-	symbol_table.vars[$$[$0-3]] = {type: 'const', valor: $$[$0-1]};
+	symbol_table.vars[$$[$0-3]] = {type: 'const'};
       
 break;
 case 10: 
 	this.$ = [{type: '=', left: $$[$0-4] , right: $$[$0-2]}];
 	this.$ = this.$.concat($$[$0]);
-	symbol_table.vars[$$[$0-4]] = {type: 'const', valor: $$[$0-2]};
+	symbol_table.vars[$$[$0-4]] = {type: 'const'};
       
 break;
 case 12: this.$ = {type: 'VAR' , variables: $$[$0]}; 

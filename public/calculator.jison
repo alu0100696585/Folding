@@ -113,13 +113,13 @@ cvrb
     : ID '=' NUMBER ';'
       {
 	$$ = {type: '=', left: $1 , right: $3};
-	symbol_table.vars[$1] = {type: 'const', valor: $3};
+	symbol_table.vars[$1] = {type: 'const'};
       }
     | ID '=' NUMBER COMMA cvrb
       { 
 	$$ = [{type: '=', left: $1 , right: $3}];
 	$$ = $$.concat($5);
-	symbol_table.vars[$1] = {type: 'const', valor: $3};
+	symbol_table.vars[$1] = {type: 'const'};
       }
     ;
 
