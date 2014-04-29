@@ -22,7 +22,8 @@ function makeScope(id){
 
 function scopeUp(){
   scope--;
-  return scope;
+  symbol_table = symbolTables[scope];
+
 }
 
 function findDef(id){
@@ -32,8 +33,12 @@ function findDef(id){
   
   while(s >= 0){
     for (var i in symbolTables[s].vars){
-      if(i == f)
-	return;
+      if(i == f){
+         if(symbolTables[s].vars[i].type != 'proc'){
+	  console.log(i.type + ' ' + i + ' ' + symbolTables[s].vars);
+	  return;
+	  }
+	}
     }
     s--;
   }
@@ -41,6 +46,27 @@ function findDef(id){
   throw new Error( f + " is not defined.");
 
 }
+
+function findDefProc(id){
+
+  var f = id;
+  var s = scope;
+  
+  while(s >= 0){
+    for (var i in symbolTables[s].vars){
+      if(i == f){
+         if(symbolTables[s].vars[i].type != 'const' && symbolTables[s].vars[i].type != 'var'){
+	  return;
+	  }
+	}
+    }
+    s--;
+  }
+   
+  throw new Error( "Procedure " + f + " is not defined.");
+
+}
+
 
 function fact (n) { 
   return n==0 ? 1 : fact(n-1) * n 
@@ -73,25 +99,51 @@ prog
           
           
           $$ = $1; 
-          console.log($$);
           return [$$, table];
         }
     ;
     
 block
-    : constt vaar proc st
+    : constt vaar procc st
       { $$ = { cnst:$1 , V:$2 , proc:$3, st:$4 };}
     ;
     
-proc
+procc 
     : /* empty */
-    | PROCEDURE name '(' pargsp ')' ';' block ';'
+    | proc procc  
+	{
+          $$ = [$1];
+          if ($2) 
+             $$ = $$.concat($2);
+        }
+    ;
+    
+proc
+    : PROCEDURE name_arg ';' block ';'
        { 
-	  $$ = { type: 'procedure' , left: $2, argumentos: $4 , right: $7 }; 
+	  $$ = { type: 'procedure' , nombre: $2[0], argumentos: $2[1] , right: $4, symboltable: symbolTables.pop() }; 
+	  scopeUp();
 	}
     ;
    
-
+name_arg
+    :name '(' pargsp ')'
+      {
+        
+	symbol_table.vars[$1] = {type: 'proc', longitud: $3.length};
+	makeScope($1);
+	
+	for(var i = 0; i < $3.length; i++ ){
+	  symbol_table.vars[$3[i]] = {type: 'var'};
+        }
+        
+        
+	$$ = [$1];
+	if($3) $$.concat($3);
+      }
+    ;
+   
+   
 pargsp
     : arg
       {
@@ -102,8 +154,6 @@ pargsp
 name 
     : ID
       {
-	symbol_table.vars[$1] = {type: 'proc'};
-	makeScope($1);
 	$$ = $1;
       }
     ;
@@ -155,7 +205,6 @@ expressions
     | expressions ';' st
         { $$ = $1;
           if ($3) $$.push($3); 
-          console.log($$);
         }
     ;
 
@@ -171,7 +220,9 @@ st
     | BEGIN expressions ';' END
         {$$ = $2;}
     | CALL ID '(' llamada ')'
-        { $$ = {type: 'call' , id:$2 , lista: $4}; }
+        { 
+	  findDefProc($2)
+	  $$ = {type: 'call' , id:$2 , lista: $4}; }
     ;
     
 arg
@@ -179,12 +230,10 @@ arg
       {$$ = [];}
     | ID 
       {
-        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [$1];
       } 
     | ID COMMA arg
       {
-        symbol_table.vars[$1] = {type: 'var'};
 	$$ = [$1].concat($3);
       } 
     ;
@@ -205,10 +254,13 @@ condition
 	}
     | ID COMPARISON NUMBER
         {
+        findDef($1);
 	 $$ = { type: $2 , left: $1 , right:$3 }; 
 	}
     | ID COMPARISON ID
         {
+        findDef($1);
+        findDef($3);
 	 $$ = { type: $2 , left: $1 , right:$3 }; 
 	}
     | ODD e 
@@ -217,7 +269,10 @@ condition
 
 e
     : ID '=' e
-        { $$ = {type:'ID' , left:$3}; }
+        { 
+          findDef($1);
+	  $$ = {type:'ID', nombre:$1 , left:$3}; 
+	}
     | PI '=' e 
         { throw new Error("Can't assign to constant 'π'"); }
     | E '=' e 
@@ -255,6 +310,10 @@ e
     | PI
         {$$ = Math.PI;}
     | ID 
-        { $$ = $1; }
+        { 
+	  findDef($1);
+	  $$ = $1; 
+        }
     ;
+
 
