@@ -12,7 +12,8 @@
   <nav>
   <ul>
     <% programs.sort.each do |p| %>
-      <li><a href="<%= p.name %>" <%=current?('/'+p.name)%>><%= p.name %></a></li>
+	<!--Por cada programa ejecutar--> 
+        <li><a href="<%= user %><%= p.name %>" class="<%=current?(user + p.name) %>" > <%= p.name %> </a></li>
     <% end %>
   </ul>
   </nav>
