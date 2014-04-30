@@ -1,7 +1,7 @@
 require 'omniauth'
 require 'omniauth-oauth2'
 require 'omniauth-google-oauth2'
-#require 'omniauth-facebook'
+require 'omniauth-facebook'
 
 
 use OmniAuth::Builder do
@@ -14,14 +14,13 @@ get '/auth/:name/callback' do
   session[:auth] = @auth = request.env['omniauth.auth']
   session[:name] = @auth['info'].name
   session[:image] = @auth['info'].image
-  session[:url] = @auth['info'].urls.values[0]
   session[:email] = @auth['info'].email
   
   PP.pp @auth.methods.sort
   
   flash[:notice] = 
         %Q{<div class="success">Access grant as #{@auth['info'].email}.</div>}
-  # Si no existe el usuario se añade a lña base de datos
+  #Cuando un usuario se autentifica se añade a la base de datos
   if !User.first(:username => session[:email])
     aux = User.create(:username => session[:email])
     aux.save
