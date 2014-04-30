@@ -67,6 +67,27 @@ function findDefProc(id){
 
 }
 
+function findDefvar(id){
+
+  var f = id;
+  var s = scope;
+
+  while(s >= 0){
+    for (var i in symbolTables[s].vars){
+      if(i == f){
+         if(symbolTables[s].vars[i].type != 'const' && symbolTables[s].vars[i].type != 'proc'){
+          return;
+          }
+        }
+    }
+    s--;
+  }
+
+  throw new Error( "Cant use constant or procedure:  " + f ");
+
+}
+
+
 
 function fact (n) { 
   return n==0 ? 1 : fact(n-1) * n 
@@ -270,7 +291,7 @@ condition
 e
     : ID '=' e
         { 
-          findDef($1);
+          findDefvar($1);
 	  $$ = {type:'ID', nombre:$1 , left:$3}; 
 	}
     | PI '=' e 

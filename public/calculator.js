@@ -209,7 +209,7 @@ break;
 case 35:this.$ = {type: 'odd', odd: $$[$0]};
 break;
 case 36: 
-          findDef($$[$0-2]);
+          findDefvar($$[$0-2]);
 	  this.$ = {type:'ID', nombre:$$[$0-2] , left:$$[$0]}; 
 	
 break;
@@ -452,6 +452,27 @@ function findDefProc(id){
   throw new Error( "Procedure " + f + " is not defined.");
 
 }
+
+function findDefvar(id){
+
+  var f = id;
+  var s = scope;
+
+  while(s >= 0){
+    for (var i in symbolTables[s].vars){
+      if(i == f){
+         if(symbolTables[s].vars[i].type != 'const' && symbolTables[s].vars[i].type != 'proc'){
+          return;
+          }
+        }
+    }
+    s--;
+  }
+
+  throw new Error( "Cant use constant or procedure:  " + f ");
+
+}
+
 
 
 function fact (n) { 
