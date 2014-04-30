@@ -83,7 +83,7 @@ function findDefvar(id){
     s--;
   }
 
-  throw new Error( "Cant use constant or procedure:  " + f ");
+  throw new Error( "Cant use constant or procedure:  " + f );
 
 }
 
