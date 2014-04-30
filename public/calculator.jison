@@ -26,24 +26,26 @@ function scopeUp(){
 
 }
 
-function findDef(id){
 
+function findDef(id){
   var f = id;
   var s = scope;
-  
+
   while(s >= 0){
     for (var i in symbolTables[s].vars){
       if(i == f){
          if(symbolTables[s].vars[i].type != 'proc'){
-	  console.log(i.type + ' ' + i + ' ' + symbolTables[s].vars);
-	  return;
-	  }
-	}
+          return symbolTables[s].name;
+          }
+        }
     }
     s--;
   }
-   
-  throw new Error( f + " is not defined.");
+
+  throw new Error( f + "is not defined" );
+
+
+  
 
 }
 
@@ -76,7 +78,7 @@ function findDefvar(id){
     for (var i in symbolTables[s].vars){
       if(i == f){
          if(symbolTables[s].vars[i].type != 'const' && symbolTables[s].vars[i].type != 'proc'){
-          return;
+          return symbolTables[s].name;
           }
         }
     }
@@ -89,9 +91,29 @@ function findDefvar(id){
 
 
 
+function numArg(id, nn) { 
+  var f = id;
+  var num = nn;
+  var s = scope;
+
+  while(s >= 0){
+    for (var i in symbolTables[s].vars){
+          if(i == f  && symbolTables[s].vars[i].longitud == num){
+             console.log(i + ' ' + f + ' ' + num + ' ' + symbolTables[s].vars[i].longitud);
+             return;
+          }
+    }
+    s--;
+  }
+
+  throw new Error( "Error:  number arguments of " + f );
+}
+
+
 function fact (n) { 
   return n==0 ? 1 : fact(n-1) * n 
 }
+
 %}
 
 %token  IF THEN COMPARISON NUMBER ID E PI EOF WHILE DO ELSE BEGIN END CALL COMMA VAR ODD CONST PROCEDURE
@@ -153,7 +175,7 @@ name_arg
         
 	symbol_table.vars[$1] = {type: 'proc', longitud: $3.length};
 	makeScope($1);
-	
+
 	for(var i = 0; i < $3.length; i++ ){
 	  symbol_table.vars[$3[i]] = {type: 'var'};
         }
@@ -243,6 +265,7 @@ st
     | CALL ID '(' llamada ')'
         { 
 	  findDefProc($2)
+          numArg($2,$4.length)
 	  $$ = {type: 'call' , id:$2 , lista: $4}; }
     ;
     
@@ -291,8 +314,8 @@ condition
 e
     : ID '=' e
         { 
-          findDefvar($1);
-	  $$ = {type:'ID', nombre:$1 , left:$3}; 
+          var t = findDefvar($1);
+	  $$ = {type:'ID', nombre:$1 , left:$3, declared_in: t}; 
 	}
     | PI '=' e 
         { throw new Error("Can't assign to constant 'π'"); }
@@ -332,9 +355,8 @@ e
         {$$ = Math.PI;}
     | ID 
         { 
-	  findDef($1);
-	  $$ = $1; 
+	  var t = findDef($1);
+	  $$ = {nombre:$1, declared_in: t}; 
         }
     ;
-
 
