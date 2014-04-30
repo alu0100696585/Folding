@@ -11,7 +11,7 @@
   <p>
   <nav>
   <ul>
-    <% programs.sort.each do |p| %>
+    <% programs.sort.each do |p, index| %>
 	<!--Por cada programa ejecutar--> 
         <li><a href="<%= user %><%= p.name %>" class="<%=current?(user + p.name) %>" > <%= p.name %> </a></li>
     <% end %>
