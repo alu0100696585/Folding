@@ -10,7 +10,6 @@ enable :sessions
 set :session_secret, '*&(^#234)'
 set :reserved_words, %w{grammar test login auth logout favicon.jpg}
 set :max_files, 3        # no more than max_files+1 will be saved per user
-set :max_users_shown, 8
 
 helpers do
   def current?(path='/')
@@ -26,40 +25,23 @@ get '/test' do
   erb :test
 end
 
-# Necesario, bug de Rubygems
-class String
-  def name
-    to_str
-  end
-end
-
-get '/logout' do
-  # Si está autenticado, desautenticar
-  if session[:auth]
-    session[:auth] = nil;
-    flash[:notice] = 
-      %Q{<div class="success">Session close.</div>}
-  end
-  
-  redirect "/"
-end
-
 # Raiz, sin usuario seleccionado
 get '/' do
+  # Si no existe el usuario se añade a lña base de datos
   # Truco: Hacer que los programas sean la lista actual de usuarios (o 10 aleatorios)
   # Escoger 10 usuarios aleatorios
   usuarios = User.all
   programs = []
 
-  i = 0
+  eux = 0
   length = usuarios.length
   if usuarios.length != 0
-    while i < length && i < settings.max_users_shown
+    while eux < length && eux < settings.max_files
       # Coger un usuario aleatorio y añadirlo a programas
-      u = usuarios.sample
-      programs.concat([u.username])
-      usuarios.delete(u)
-      i += 1
+      aux = usuarios.sample
+      programs.concat([aux.username])
+      usuarios.delete(aux)
+      eux += 1
     end
   end
   
@@ -70,54 +52,55 @@ end
 
 get '/:user?/:file?' do |user, file|
   # Buscar y mostrar la lista de programas de un usuario
-  u = User.first(:username => user)
+  aux = User.first(:username => user)
 
-  if !u
+  if !aux
     flash[:notice] = 
-      %Q{<div class="error">No se ha encontrado al usuario "#{user}". </div>}
+      %Q{<div class="error">User "#{user}" not found. </div>}
     redirect to '/'
   end
   
   # Cargar programa del usuario deseado
-  programs = u.pl0programs
+  programs = aux.pl0programs
   c = programs.first(:name => file)
   
-  if !c
+  if !c# Necesario, bug de Rubygems
+
     flash[:notice] = 
-      %Q{<div class="error">No se ha encontrado el fichero "#{file}" del usuario "#{user}". </div>}
+      %Q{<div class="error">File "#{file}" not found. </div>}
     redirect to '/'
   end
 
   # Cargar los datos para la página
   source = c.source
 
-  erb :index, :locals => { :programs => programs, :source => source, :user => '/' + u.username + '/' }
+  erb :index, :locals => { :programs => programs, :source => source, :user => '/' + aux.username + '/' }
 end
 
 get '/:user?' do |user|    
   # Buscar programas de un usuario y mostrarlos en el menu
-  u = User.first(:username => user)
+  aux = User.first(:username => user)
 
-  if !u
+  if !aux
     flash[:notice] = 
-      %Q{<div class="error">No se ha encontrado al usuario "#{user}". </div>}
+      %Q{<div class="error">User "#{user}" not found.</div>}
     redirect to '/'
   end
 
   # Cargar los programas del usuario actual
-  programs = u.pl0programs
+  programs = aux.pl0programs
   source = ""
 
-  erb :index, :locals => { :programs => programs, :source => source, :user => u.username + '/' }
+  erb :index, :locals => { :programs => programs, :source => source, :user => aux.username + '/' }
 end
 
 get '/:selected?' do |selected|
   # Buscar programas de un usuario y mostrarlos en el menu
-  u = User.first(:username => selected)
-  puts u
-  if !u
+  aux = User.first(:username => selected)
+  puts aux
+  if !aux
     flash[:notice] = 
-      %Q{<div class="error">No se ha encontrado al usuario "#{selected}". </div>}
+      %Q{<div class="error">User "#{selected}" not found. </div>}
     redirect to '/'
   end
 
@@ -135,7 +118,7 @@ post '/save' do
   if session[:auth] # authenticated
     if settings.reserved_words.include? name  # check it on the client side
       flash[:notice] = 
-        %Q{<div class="error">No se puede guardar el fichero de nombre '#{name}'.</div>}
+        %Q{<div class="error">The file can't be save as '#{name}'.</div>}
       redirect back
     else
       # Comprobar si el usuario existe.
@@ -146,7 +129,7 @@ post '/save' do
         # u = User.create(:username => session[:email])
         # puts "-> Creando nuevo usuario ->  " + u.to_str
         flash[:notice] = 
-          %Q{<div class="error">No existe el usuario '#{session[:email]}' en la base de datos .</div>}
+          %Q{<div class="error">User '#{session[:email]}' not exist in the data base.</div>}
         redirect to '/'
       end
       pp aux
@@ -170,15 +153,21 @@ post '/save' do
       aux.save
       
       flash[:notice] = 
-        %Q{<div class="success">Fichero guardado como "#{c.name}" por "#{session[:name]}".</div>}
+        %Q{<div class="success">File save as "#{c.name}" by "#{session[:name]}".</div>}
       # redirect to '/'+name
       redirect to '/' + aux.username + '/' + name 
     end
   else
     flash[:notice] = 
-      %Q{<div class="success">No está autenticado.<br />
-         Inicie sesión con Google o con Facebook.
+      %Q{<div class="success">You are not atenticated.<br />
+         Log in with Google or Facebook.
          </div>}
     redirect back
+  end
+end
+
+class String
+  def name
+    to_str
   end
 end
