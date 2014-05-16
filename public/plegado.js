@@ -49,8 +49,8 @@ function recorrido (arbol) {
         arbol["type"] = "NUM";
 
         arbol["valor"] = res[1];
-
-        arbol["declared_in"] = undefined;
+        if(arbol["declared_in"])
+           arbol["declared_in"] = undefined;
 
       }
     }

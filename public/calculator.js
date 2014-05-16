@@ -90,11 +90,11 @@ case 1:
 	  symbol_table = symbolTables[scope];
           
           
-          this.$ = $$[$0-2]; 
+          this.$ = { type:'program' , block: $$[$0-2], symboltable: table}; 
           return [this.$, table];
         
 break;
-case 2: this.$ = { cnst:$$[$0-3] , V:$$[$0-2] , proc:$$[$0-1], st:$$[$0] };
+case 2: this.$ = { type:'block', cnst:$$[$0-3] , V:$$[$0-2] , proc:$$[$0-1], st:$$[$0] };
 break;
 case 4:
           this.$ = [$$[$0-1]];
@@ -109,7 +109,7 @@ case 5:
 break;
 case 6:
         
-	symbol_table.vars[$$[$0-3]] = {type: 'proc', longitud: $$[$0-1].length};
+	symbol_table.vars[$$[$0-3]] = {type: 'procedure', longitud: $$[$0-1].length};
 	makeScope($$[$0-3]);
 
 	for(var i = 0; i < $$[$0-1].length; i++ ){
@@ -244,7 +244,7 @@ case 46:this.$ = -$$[$0];
 break;
 case 47:this.$ = $$[$0-1];
 break;
-case 48:this.$ = Number(yytext);
+case 48:this.$ = {type:'NUM' , valor:$$[$0]};
 break;
 case 49:this.$ = Math.E;
 break;

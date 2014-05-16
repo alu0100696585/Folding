@@ -141,14 +141,14 @@ prog
 	  symbol_table = symbolTables[scope];
           
           
-          $$ = $1; 
+          $$ = { type:'program' , block: $1, symboltable: table}; 
           return [$$, table];
         }
     ;
     
 block
     : constt vaar procc st
-      { $$ = { cnst:$1 , V:$2 , proc:$3, st:$4 };}
+      { $$ = { type:'block', cnst:$1 , V:$2 , proc:$3, st:$4 };}
     ;
     
 procc 
@@ -173,7 +173,7 @@ name_arg
     :name '(' pargsp ')'
       {
         
-	symbol_table.vars[$1] = {type: 'proc', longitud: $3.length};
+	symbol_table.vars[$1] = {type: 'procedure', longitud: $3.length};
 	makeScope($1);
 
 	for(var i = 0; i < $3.length; i++ ){
