@@ -1,17 +1,17 @@
-var ambitos = [];
+var scopes = [];
 
 
-function buscarConstante (n_simbol, ambito) {
+function findConst (n_simbol, ambito) {
 
 
-  for (i = (ambitos.length - 1); i >= 0; i--) {
+  for (i = (scopes.length - 1); i >= 0; i--) {
 
 
-    if (ambitos[i].name == ambito && ambitos[i].symbolTables[n_simbol] != undefined) {
+    if (scopes[i].name == ambito && scopes[i].symbolTables[numsym] != undefined) {
 
-      if (ambitos[i].symbolTables[n_simbol].type == "const")
+      if(scopes[i].symbolTables[numsym].type == "const")
 
-        return [true, ambitos[i].symbolTables[n_simbol].valor];
+        return [true, scopes[i].symbolTables[numsym].valor];
 
       break;
     }
@@ -23,34 +23,34 @@ function buscarConstante (n_simbol, ambito) {
 
 };
 
-function recorrido (arbol) {
+function recorrido (tree) {
 
 
-	if (typeof arbol == "object") {
+	if (typeof tree == "object") {
 
 
-		if (arbol.type == "program")
+		if (tree.type == "program")
 
 			ambitos.push( { name: "global", symbol_table: arbol.symboltable } );
 
-		if (arbol.type == "prodecure")
+		if (tree.type == "prodecure")
 
                          ambitos.push( { name: arbol.id, symbol_table: arbol.symboltable } );
 
     
-    if (arbol.type == "ID") {
+    if (tree.type == "ID") {
 
 	console.log("hasta buscar constante");      
-      var res = buscarConstante(arbol.valor, arbol.declared_in);
+      var res = findConst(arbol.valor, arbol.declared_in);
 
       
       if (res[0]) {
 
-        arbol["type"] = "NUM";
+        tree["type"] = "NUM";
 
-        arbol["valor"] = res[1];
-        if(arbol["declared_in"])
-           arbol["declared_in"] = undefined;
+        tree["valor"] = res[1];
+        if(tree["declared_in"])
+           tree["declared_in"] = undefined;
 
       }
     }
@@ -64,59 +64,59 @@ function recorrido (arbol) {
 		})
 
 
-		if (arbol.type == "program" || arbol.type == "procedure")
+		if (tree.type == "program" || tree.type == "procedure")
 
-		  ambitos.pop();
+		  scopes.pop();
 
       
-		if (arbol.type == "+" || arbol.type == "-" || arbol.type == "*" || arbol.type == "/") {
+		if (tree.type == "+" || tree.type == "-" || tree.type == "*" || tree.type == "/") {
 
 
       var result;
 
-      if (typeof arbol.left == "object" && arbol.left.type == "NUM"
+      if (typeof tree.left == "object" && tree.left.type == "NUM"
 
-       && typeof arbol.right == "object" && arbol.right.type == "NUM") {
+       && typeof tree.right == "object" && tree.right.type == "NUM") {
 
-        switch (arbol.type) {
+        switch (tree.type) {
 
       
           case "+":
 
-            result = parseFloat(arbol.left.valor) + parseFloat(arbol.right.valor);
+            result = parseFloat(tree.left.valor) + parseFloat(tree.right.valor);
 
           break;
       
 
           case "-":
 
-            result = parseFloat(arbol.left.valor) - parseFloat(arbol.right.valor);
+            result = parseFloat(tree.left.valor) - parseFloat(tree.right.valor);
 
           break;
       
 
           case "*":
 
-            result = parseFloat(arbol.left.valor) * parseFloat(arbol.right.valor);
+            result = parseFloat(tree.left.valor) * parseFloat(tree.right.valor);
 
           break;
           
 
           case "/":
 
-            result = parseFloat(arbol.left.valor) / parseFloat(arbol.right.valor);
+            result = parseFloat(tree.left.valor) / parseFloat(tree.right.valor);
 
           break;
         }
 
       
-        arbol.left = undefined;
+        tree.left = undefined;
 
-        arbol.right = undefined;
+        tree.right = undefined;
 
-        arbol.type = "NUM";
+        tree.type = "NUM";
 
-        arbol.valor = result.toString();
+        tree.valor = result.toString();
 
       }
     }
