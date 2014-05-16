@@ -7,11 +7,11 @@ function buscarConstante (n_simbol, ambito) {
   for (i = (ambitos.length - 1); i >= 0; i--) {
 
 
-    if (ambitos[i].name == ambito && ambitos[i].symbol_table[n_simbol] != undefined) {
+    if (ambitos[i].name == ambito && ambitos[i].symbolTables[n_simbol] != undefined) {
 
-      if (ambitos[i].symbol_table[n_simbol].type == "const")
+      if (ambitos[i].symbolTables[n_simbol].type == "const")
 
-        return [true, ambitos[i].symbol_table[n_simbol].valor];
+        return [true, ambitos[i].symbolTables[n_simbol].valor];
 
       break;
     }
@@ -31,11 +31,11 @@ function recorrido (arbol) {
 
 		if (arbol.type == "program")
 
-			ambitos.push( { name: "global", symbol_table: arbol.symbol_table } );
+			ambitos.push( { name: "global", symbol_table: arbol.symboltable } );
 
 		if (arbol.type == "prodecure")
 
-      ambitos.push( { name: arbol.id, symbol_table: arbol.symbol_table } );
+                         ambitos.push( { name: arbol.id, symbol_table: arbol.symboltable } );
 
     
     if (arbol.type == "ID") {
