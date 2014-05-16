@@ -40,7 +40,7 @@ function recorrido (arbol) {
     
     if (arbol.type == "ID") {
 
-      
+	console.log("hasta buscar constante");      
       var res = buscarConstante(arbol.valor, arbol.declared_in);
 
       
