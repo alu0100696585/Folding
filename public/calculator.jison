@@ -348,7 +348,7 @@ e
     | '(' e ')'
         {$$ = $2;}
     | NUMBER
-        {$$ = Number(yytext);}
+        {$$ = {type:'NUM' , valor:$1};}
     | E
         {$$ = Math.E;}
     | PI
