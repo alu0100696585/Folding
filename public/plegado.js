@@ -23,7 +23,7 @@ function findConst (n_simbol, ambito) {
 
 };
 
-function recorrido (tree) {
+function goIn(tree) {
 
 
 	if (typeof tree == "object") {
@@ -60,7 +60,7 @@ function recorrido (tree) {
 
 			//console.log(k + ": " + v);
 
-			recorrido(v);
+			goIn(v);
 		})
 
 
